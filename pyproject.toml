@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ping"
+version = "0.1.0"
+description = ""
+authors = ["Boris Tvaroska <boris@tvaroska.sk>"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.14"
+fastapi = "^0.111.0"
+uvicorn = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
