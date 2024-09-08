@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 import google.auth
+from google.cloud import storage
+
 
 instance_counter = 0
 
@@ -46,9 +48,17 @@ def test():
     """
     return PingResponse(request = 'test', response = 'works')
 
+@app.get("/buckets")
+def buckets():
+
+    client = storage.Client()
+    return [bucket.name for bucket in client.list_buckets()]
+
+
 @app.get("/{request}", summary="Pong to your ping")
 def ping(request: str):
     """
     Ping endpoint - response with pong to any request
     """
     return PingResponse(request = request, response = 'pong')
+

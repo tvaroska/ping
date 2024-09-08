@@ -11,6 +11,7 @@ python = ">=3.9,<3.14"
 fastapi = "^0.111.0"
 uvicorn = "^0.29.0"
 google-auth = "^2.29.0"
+google-cloud-storage = "^2.16.0"
 
 
 [build-system]
