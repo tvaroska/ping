@@ -1,4 +1,4 @@
-FROM python:3.12.3-slim as python-base
+FROM python:3.12.8-slim AS python-base
 ENV PYTHONUNBUFFERED=1 \
     # prevents python creating .pyc files
     PYTHONDONTWRITEBYTECODE=1 \
@@ -10,14 +10,14 @@ ENV PYTHONUNBUFFERED=1 \
     \
     # poetry
     # https://python-poetry.org/docs/configuration/#using-environment-variables
-    POETRY_VERSION=1.8.3 \
+    POETRY_VERSION=1.8.5 \
     # make poetry create the virtual environment in the project's root
     # it gets named `.venv`
     POETRY_VIRTUALENVS_IN_PROJECT=true \
     # do not ask any interactive question
     POETRY_NO_INTERACTION=1
 
-FROM python-base as builder-base
+FROM python-base AS builder-base
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         # deps for installing poetry
@@ -44,7 +44,7 @@ RUN /root/.local/bin/poetry export --without-hashes > requirements.txt
 # RUN pip3 install -r requirements.txt
 
 # `production` image used for runtime
-FROM python-base as production
+FROM python-base AS production
 
 COPY --from=builder-base requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
