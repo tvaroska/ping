@@ -51,8 +51,11 @@ def test():
 @app.get("/buckets")
 def buckets():
 
-    client = storage.Client()
-    return [bucket.name for bucket in client.list_buckets()]
+    try:
+        client = storage.Client()
+        return [bucket.name for bucket in client.list_buckets()]
+    except Exception as e:
+        return {'error': str(e)}
 
 
 @app.get("/{request}", summary="Pong to your ping")
