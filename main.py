@@ -61,8 +61,8 @@ def get_file(name: str):
     fname = os.getenv(name)
     if fname:
         with open(fname) as f:
-            content = f.read
-        return {'file_name': fname, 'content': content}
+            content = f.read()
+        return {'file_name': fname, 'content': str(content)}
     else:
         raise HTTPException(status_code=404, detail="Name does not exists")
 
