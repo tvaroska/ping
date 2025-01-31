@@ -1,6 +1,6 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 import google.auth
@@ -50,13 +50,21 @@ def test():
 
 @app.get("/buckets")
 def buckets():
-
     try:
         client = storage.Client()
         return [bucket.name for bucket in client.list_buckets()]
     except Exception as e:
         return {'error': str(e)}
 
+@app.get("/file/{name}")
+def get_file(name: str):
+    fname = os.getenv(name)
+    if fname:
+        with open(fname) as f:
+            content = f.read
+        return {'file_name': fname, 'content': content}
+    else:
+        raise HTTPException(status_code=404, detail="Name does not exists")
 
 @app.get("/{request}", summary="Pong to your ping")
 def ping(request: str):
