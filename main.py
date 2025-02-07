@@ -1,4 +1,5 @@
 import os
+import requests
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -63,6 +64,15 @@ def get_file(name: str):
         with open(fname) as f:
             content = f.read()
         return {'file_name': fname, 'content': str(content)}
+    else:
+        raise HTTPException(status_code=404, detail="Name does not exists")
+
+@app.get("/rest/{name}")
+def get_rest(name: str):
+    hname = os.getent(name)
+    if hname:
+        response = requests.get(hname)
+        return {'resonse': response.text}
     else:
         raise HTTPException(status_code=404, detail="Name does not exists")
 
