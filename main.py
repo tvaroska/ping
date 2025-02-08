@@ -1,3 +1,5 @@
+from typing import Optional, List
+
 import os
 import requests
 
@@ -19,10 +21,14 @@ class MainResponse(BaseModel):
     host_name: str
     project_id: str
 
-
 class PingResponse(BaseModel):
     request: str
     response: str
+
+
+class BucketResponse(BaseModel):
+    status: str
+    buckets: Optional[List[str]]
 
 @app.get("/", response_model=MainResponse, summary="Pong to your ping")
 def ping():
@@ -42,20 +48,16 @@ def ping():
     )
 
 
-@app.get("/test", summary="Test endpoint")
-def test():
-    """
-    Test endpoint
-    """
-    return PingResponse(request = 'test', response = 'works')
-
-@app.get("/buckets")
+@app.get("/buckets", response_model = BucketResponse, summary="List of visible buckets")
 def buckets():
+    """
+    Test access in the project - respond with list of avialable buckets
+    """
     try:
         client = storage.Client()
-        return [bucket.name for bucket in client.list_buckets()]
+        return BucketResponse(status = 'OK', buckets = [bucket.name for bucket in client.list_buckets()])
     except Exception as e:
-        return {'error': str(e)}
+        return BucketResponse(status = str(e))
 
 @app.get("/file/{name}")
 def get_file(name: str):
@@ -82,4 +84,3 @@ def ping(request: str):
     Ping endpoint - response with pong to any request
     """
     return PingResponse(request = request, response = 'pong')
-
